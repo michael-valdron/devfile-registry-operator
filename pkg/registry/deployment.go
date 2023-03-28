@@ -28,15 +28,11 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 
 	registryv1alpha1 "github.com/devfile/registry-operator/api/v1alpha1"
+	"github.com/devfile/registry-operator/pkg/config"
 )
 
 func GenerateDeployment(cr *registryv1alpha1.DevfileRegistry, scheme *runtime.Scheme, labels map[string]string) *appsv1.Deployment {
 	replicas := int32(1)
-	allowPrivilegeEscalation := false
-	runAsNonRoot := true
-	runAsUser := int64(1001)
-	runAsGroup := int64(2001)
-	fsGroup := int64(3001)
 
 	dep := &appsv1.Deployment{
 		ObjectMeta: generateObjectMeta(cr.Name, cr.Namespace, labels),
@@ -55,16 +51,6 @@ func GenerateDeployment(cr *registryv1alpha1.DevfileRegistry, scheme *runtime.Sc
 							Image:           GetDevfileIndexImage(cr),
 							ImagePullPolicy: GetDevfileIndexImagePullPolicy(cr),
 							Name:            "devfile-registry",
-							SecurityContext: &corev1.SecurityContext{
-								AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-								RunAsNonRoot:             &runAsNonRoot,
-								Capabilities: &corev1.Capabilities{
-									Drop: []corev1.Capability{"ALL"},
-								},
-								SeccompProfile: &corev1.SeccompProfile{
-									Type: "RuntimeDefault",
-								},
-							},
 							Ports: []corev1.ContainerPort{{
 								ContainerPort: DevfileIndexPort,
 							}},
@@ -117,16 +103,6 @@ func GenerateDeployment(cr *registryv1alpha1.DevfileRegistry, scheme *runtime.Sc
 							Image:           GetOCIRegistryImage(cr),
 							ImagePullPolicy: GetOCIRegistryImagePullPolicy(cr),
 							Name:            "oci-registry",
-							SecurityContext: &corev1.SecurityContext{
-								AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-								RunAsNonRoot:             &runAsNonRoot,
-								Capabilities: &corev1.Capabilities{
-									Drop: []corev1.Capability{"ALL"},
-								},
-								SeccompProfile: &corev1.SeccompProfile{
-									Type: "RuntimeDefault",
-								},
-							},
 							Resources: corev1.ResourceRequirements{
 								Requests: corev1.ResourceList{
 									corev1.ResourceCPU:    resource.MustParse("100m"),
@@ -219,16 +195,6 @@ func GenerateDeployment(cr *registryv1alpha1.DevfileRegistry, scheme *runtime.Sc
 			Image:           GetRegistryViewerImage(cr),
 			ImagePullPolicy: GetRegistryViewerImagePullPolicy(cr),
 			Name:            "registry-viewer",
-			SecurityContext: &corev1.SecurityContext{
-				AllowPrivilegeEscalation: &allowPrivilegeEscalation,
-				RunAsNonRoot:             &runAsNonRoot,
-				Capabilities: &corev1.Capabilities{
-					Drop: []corev1.Capability{"ALL"},
-				},
-				SeccompProfile: &corev1.SeccompProfile{
-					Type: "RuntimeDefault",
-				},
-			},
 			Resources: corev1.ResourceRequirements{
 				Requests: corev1.ResourceList{
 					corev1.ResourceCPU:    resource.MustParse("250m"),
@@ -313,13 +279,36 @@ func GenerateDeployment(cr *registryv1alpha1.DevfileRegistry, scheme *runtime.Sc
 		})
 	}
 
-	// Enables podspec security context if storage is enabled
-	if cr.Spec.Storage.Enabled == nil || *cr.Spec.Storage.Enabled {
-		dep.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
-			RunAsNonRoot: &runAsNonRoot,
-			RunAsUser:    &runAsUser,
-			RunAsGroup:   &runAsGroup,
-			FSGroup:      &fsGroup,
+	// Set security context if cluster is OpenShift
+	if config.ControllerCfg.IsOpenShift() {
+		allowPrivilegeEscalation := false
+		runAsNonRoot := true
+		runAsUser := int64(1001)
+		runAsGroup := int64(2001)
+		fsGroup := int64(3001)
+
+		// Enables podspec security context if storage is enabled
+		if cr.Spec.Storage.Enabled == nil || *cr.Spec.Storage.Enabled {
+			dep.Spec.Template.Spec.SecurityContext = &corev1.PodSecurityContext{
+				RunAsNonRoot: &runAsNonRoot,
+				RunAsUser:    &runAsUser,
+				RunAsGroup:   &runAsGroup,
+				FSGroup:      &fsGroup,
+			}
+		}
+
+		// Enables security contexts across all containers
+		for i := 0; i < len(dep.Spec.Template.Spec.Containers); i++ {
+			dep.Spec.Template.Spec.Containers[i].SecurityContext = &corev1.SecurityContext{
+				AllowPrivilegeEscalation: &allowPrivilegeEscalation,
+				RunAsNonRoot:             &runAsNonRoot,
+				Capabilities: &corev1.Capabilities{
+					Drop: []corev1.Capability{"ALL"},
+				},
+				SeccompProfile: &corev1.SeccompProfile{
+					Type: "RuntimeDefault",
+				},
+			}
 		}
 	}
 
