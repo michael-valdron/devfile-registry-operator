@@ -49,15 +49,15 @@ metadata:
       ]
     capabilities: Basic Install
     categories: OpenShift Optional,Developer Tools
-    containerImage: quay.io/devfile/registry-operator:v0.1.3
-    createdAt: "2023-11-17T19:18:09Z"
+    containerImage: quay.io/devfile/registry-operator:v0.1.4
+    createdAt: "2023-11-20T17:08:14Z"
     description: Deploy and manage Devfile Registries on Kubernetes and OpenShift
       with the Devfile Registry operator.
     operators.operatorframework.io/builder: operator-sdk-v1.28.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
     repository: https://github.com/devfile/registry-operator
     support: Red Hat
-  name: registry-operator.v0.1.3
+  name: registry-operator.v0.1.4
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -448,7 +448,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: quay.io/devfile/registry-operator:next
+                image: quay.io/devfile/registry-operator:v0.1.4
                 imagePullPolicy: Always
                 livenessProbe:
                   httpGet:
@@ -569,7 +569,7 @@ spec:
   provider:
     name: Red Hat
     url: https://redhat.com
-  version: 0.1.3
+  version: 0.1.4
   webhookdefinitions:
   - admissionReviewVersions:
     - v1
