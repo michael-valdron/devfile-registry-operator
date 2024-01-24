@@ -27,7 +27,7 @@ if [[ $# -lt 1 ]]; then usage; fi
 SCHEMA_VERSION=$1
 FIRST_DIGIT="${SCHEMA_VERSION%%.*}"
 RELEASE_BRANCH="release-v${FIRST_DIGIT}"
-DEVFILE_REPO="git@github.com:devfile/registry-operator.git"
+DEVFILE_REPO="git@github.com:michael-valdron/devfile-registry-operator.git"
 RELEASE_UPSTREAM_NAME="devfile-upstream-release"
 
 if ! command -v hub > /dev/null; then
@@ -132,7 +132,7 @@ verifyReleaseBranch() {
 
 createPullRequest(){
   echo "[INFO] Creating a PR"
-  hub pull-request --base devfile:${RELEASE_BRANCH} --head ${SCHEMA_VERSION} -m "$1"
+  hub pull-request --base michael-valdron:${RELEASE_BRANCH} --head ${SCHEMA_VERSION} -m "$1"
 }
  
 main(){
