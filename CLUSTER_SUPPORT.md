@@ -5,7 +5,7 @@ systems based on which Operator SDK version the registry operator
 is using as well as the API overlap between OpenShift and 
 Kubernetes. 
 
-Operator currently targets Kubernetes 1.29 API and is tested on OpenShift 4.18.
+Operator currently targets [Kubernetes 1.29 API](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.29.md) and is tested on [OpenShift 4.18](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes).
 
 ## Operator SDK
 
