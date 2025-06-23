@@ -5,11 +5,11 @@ systems based on which Operator SDK version the registry operator
 is using as well as the API overlap between OpenShift and 
 Kubernetes. 
 
-Operator currently targets Kubernetes 1.29 API and is tested on OpenShift 4.15.
+Operator currently targets [Kubernetes 1.29 API](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.29.md) and is tested on [OpenShift 4.18](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/release_notes/ocp-4-18-release-notes).
 
 ## Operator SDK
 
-Current version in use by the Registry Operator is [Operator SDK v1.28.0](https://sdk.operatorframework.io/docs/upgrading-sdk-version/v1.28.0/), planned to use [Operator SDK v1.36.0](https://sdk.operatorframework.io/docs/upgrading-sdk-version/v1.36.0/) ([devfile/api#1626](https://github.com/devfile/api/issues/1626)) to be in sync with target Kubernetes 1.29 version.
+Current version in use by the Registry Operator is [Operator SDK v1.28.0](https://sdk.operatorframework.io/docs/upgrading-sdk-version/v1.28.0/), planned to use [Operator SDK v1.39.1](https://sdk.operatorframework.io/docs/upgrading-sdk-version/v1.39.1/) ([devfile/api#1626](https://github.com/devfile/api/issues/1626)) to be in sync with target OpenShift 4.18 version.
 
 To update the Operator SDK, refer to [Upgrade SDK Version](https://sdk.operatorframework.io/docs/upgrading-sdk-version/) 
 and change the following
