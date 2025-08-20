@@ -3,7 +3,7 @@
 
 <div id="header">
 
-[![Go 1.22](https://img.shields.io/badge/1.22-blue?logo=go&labelColor=gray)](https://go.dev/doc/go1.22)
+[![Go 1.24](https://img.shields.io/badge/1.24-blue?logo=go&labelColor=gray)](https://go.dev/doc/go1.24)
 [![Apache2.0 License](https://img.shields.io/badge/license-Apache2.0-brightgreen.svg)](LICENSE)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8256/badge)](https://www.bestpractices.dev/projects/8256)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/devfile/registry-operator/badge)](https://securityscorecards.dev/viewer/?uri=github.com/devfile/registry-operator)
@@ -47,7 +47,7 @@ security setups.
 
 ### Development
 
-- Go 1.22.x
+- Go 1.24.x
 - Docker / Podman
 - Operator SDK 1.28.x
 
